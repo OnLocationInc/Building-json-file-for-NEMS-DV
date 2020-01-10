@@ -77,15 +77,15 @@ class MyFrame(wx.Frame):
         self.edittype = wx.TextCtrl(self.p1, size=(140, -1))
 
         #optname
-        self.optname = wx.StaticText(self.p1,label="Optname:")
+        self.optname = wx.StaticText(self.p1,label="Optname: (press eneter to submit)")
         self.editopt = wx.TextCtrl(self.p1, size=(200, -1), style=wx.TE_PROCESS_ENTER)
         
         #optsym
-        self.optsymname = wx.StaticText(self.p1,label="Optsym:")
+        self.optsymname = wx.StaticText(self.p1,label="Optsym: (press eneter to submit)")
         self.editoptsym = wx.TextCtrl(self.p1, size=(140, -1), style=wx.TE_PROCESS_ENTER)
 
         #optsym
-        self.yearsname = wx.StaticText(self.p1,label="years:")
+        self.yearsname = wx.StaticText(self.p1,label="years: (press eneter to submit)")
         self.edityears = wx.TextCtrl(self.p1, size=(140, -1), style=wx.TE_PROCESS_ENTER)
 
         # Set sizer for the frame, so we can change frame size to match widgets
@@ -109,16 +109,19 @@ class MyFrame(wx.Frame):
         self.sizer.Add(self.edittype, (1, 1))
         #self.sizer.Add(self.button, (2, 0), (1, 2), flag=wx.EXPAND)
 
-        self.sizer.Add(self.optname, (2, 0))
-        self.sizer.Add(self.optsymname, (2, 1))
-        self.sizer.Add(self.editopt, (3, 0))
-        self.sizer.Add(self.editoptsym, (3, 1))
 
-        self.sizer.Add(self.yearsname, (4, 0))
-        self.sizer.Add(self.edityears, (4, 1))
+        self.sizer.Add(self.st, (2, 0))
+        self.sizer.Add(self.st2, (3, 0))
 
-        self.sizer.Add(self.st, (5, 0))
-        self.sizer.Add(self.st2, (6, 0))
+        self.sizer.Add(self.optname, (4, 0))
+        self.sizer.Add(self.optsymname, (4, 1))
+        self.sizer.Add(self.editopt, (5, 0))
+        self.sizer.Add(self.editoptsym, (5, 1))
+
+        self.sizer.Add(self.yearsname, (6, 0))
+        self.sizer.Add(self.edityears, (6, 1))
+
+
         self.sizer.Add(self.button, (7, 0), flag=wx.EXPAND)
         # Set simple sizer for a nice border
         self.border = wx.BoxSizer()
@@ -158,14 +161,17 @@ class MyFrame(wx.Frame):
         #print("\n".join("{}: [{}]\n}},\n".format(x, y) for x, y in zip(operationanme, operationsymbol)))
         #print('"names":{{\n {}:{}\n}}\n'.format('\n'.join(*operationanme,*operationsymbol)))
         #print(years[0])
-        print('"years": ['+ ','.join('"{0}"'.format(ww) for ww in years[0])+'],')
+        print('"years": ['+ ','.join('"{0}"'.format(ww) for ww in years[0])+'],\n')
+        print('"xAxis": ["Year", "Scenario"],\n')
         print('"title": "{}",\n"type": "{}"\n}}\n]'.format(self.editname.GetValue(),self.edittype.GetValue()))
 
         #with open("C:\\Users\\foggi\\Documents\\Fred.txt", "w") as fp:
         with open("S:\\building_json_for_nemsdv\\sample1.json", "w") as fp:
-            fp.write('[\n{\n"stubs": ['+ ',\n '.join('"{0}"'.format(w) for w in stubgrp)+'\n],')
+            fp.write('[\n{\n"stubs": ['+ ',\n '.join('"{0}"'.format(w) for w in stubgrp)+'\n],\n')
             fp.write('"'+"names"+'":{')
-            fp.write((',\n '.join('"{}":{}'.format(x,y) for x, y in operation_name_sym.items())+'\n},').replace("'",'"'))
+            fp.write((',\n '.join('"{}":{}'.format(x,y) for x, y in operation_name_sym.items())+'\n},\n').replace("'",'"'))
+            fp.write('"years": ['+ ','.join('"{0}"'.format(ww) for ww in years[0])+'],\n')
+            fp.write('"xAxis": ["Year", "Scenario"],\n')
             fp.write('"title": "{}",\n"type": "{}"\n}}\n]'.format(self.editname.GetValue(),self.edittype.GetValue()))
             
             #fp.write('[\n{{\n"stubs": [{}\n],\n'.format('\n'.join(stubgrp)))
@@ -179,8 +185,9 @@ class MyFrame(wx.Frame):
 
         q = {}
         rowname_formatted = []
+        #sorted(row_name.keys())
         q = {(l,m): v for (l,m),v in row_name.items() if l == selectn}
-        for (l,m), v in q.items(): rowname_formatted.append(str(m)+" "+str(v))
+        for (l,m), v in sorted(q.items()): rowname_formatted.append(str(m)+" "+str(v))
         return rowname_formatted
 
     def update(self, event):
@@ -194,12 +201,12 @@ class MyFrame(wx.Frame):
     def OnCombo(self, event):
         table_num = int(self.st.GetValue().split(' ')[0])
         row_num = int(self.st2.GetValue().split(' ')[0])
-        return (stub_name[(table_num,row_num)])
+        return (self.st.GetValue(),self.st2.GetValue(),stub_name[(table_num,row_num)])
 
     def func(self,event):
-        x=self.OnCombo(None)
+        x=self.OnCombo(None)[2]
         stubgrp.append(x)
-        #print (x)
+        print (self.OnCombo(None)[0],self.OnCombo(None)[1]," ########## ",self.OnCombo(None)[2])
 
     def update2(self,event):
         self.editoptsym.Clear()
@@ -218,7 +225,7 @@ class MyFrame(wx.Frame):
         # print (operationsymbol)
         #print (self.OnCombo2(None)[1])
         operation_name_sym[self.OnCombo2(None)[0]] = self.OnCombo2(None)[1]
-        #print (operation_name_sym)
+        print (operation_name_sym)
 
 
     def func3(self,event):
