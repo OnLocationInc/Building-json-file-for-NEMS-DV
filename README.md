@@ -10,6 +10,7 @@ and double click on build_json6.cpython-35.pyc
 
 
 **************************************************************************
-**********For instruction and it's use please see the following issue:*****
+**********For instruction and its use please see the following issue:*****
+
 **********steps to run the build *.json file program***********************  
 ***************************************************************************
