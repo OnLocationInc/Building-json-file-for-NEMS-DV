@@ -14,3 +14,5 @@ and double click on build_json6.cpython-35.pyc
 
 ***********************steps to run the build *.json file program***********************  
 ****************************************************************************************
+
+see https://github.com/OnLocationInc/Building-json-file-for-NEMS-DV/issues/4
